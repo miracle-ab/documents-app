@@ -4,6 +4,7 @@ import { AuthActions } from './auth.actions';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { DocumentApi } from '../../../core/services/document-api';
 import { NotificationService } from '../../../core/services/notification';
+import { Router } from '@angular/router';
 
 const TOKEN_KEY = 'accessToken';
 const USER_KEY = 'user';
@@ -13,6 +14,7 @@ export class AuthEffects {
   private readonly actions$ = inject(Actions);
   private readonly api = inject(DocumentApi);
   private readonly notifications = inject(NotificationService);
+  private readonly router = inject(Router);
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -36,6 +38,7 @@ export class AuthEffects {
           localStorage.setItem(TOKEN_KEY, response.accessToken);
           localStorage.setItem(USER_KEY, JSON.stringify(response.user));
           this.notifications.success('Login successful');
+          this.router.navigateByUrl('/documents');
         }),
       ),
     { dispatch: false },
@@ -61,7 +64,7 @@ export class AuthEffects {
           return AuthActions.logout();
         }
 
-        return AuthActions.loginSuccess({
+        return AuthActions.restoreSessionSuccess({
           response: { accessToken: token, user: JSON.parse(raw) },
         });
       }),

@@ -9,7 +9,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Пароль</mat-label>
+        <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" />
       </mat-form-field>
 
@@ -21,7 +21,7 @@
         [disabled]="form.invalid || (loading$ | async)"
       >
         <ng-container *ngIf="!(loading$ | async); else loadingTpl">
-          <button matButton="filled">Войти</button>
+          Login
         </ng-container>
         <ng-template #loadingTpl>
           <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>

@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { DocumentsActions } from '../state/documents.actions';
 import { selectDocumentById } from '../state/documents.selectors';
 import { filter } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 interface DialogData {
   mode: 'create' | 'edit';
@@ -27,6 +28,7 @@ interface DialogData {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatButtonModule,
   ],
   templateUrl: './document-dialog.html',
   styleUrl: './document-dialog.scss',
