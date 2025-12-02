@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Contract with ACME",
+    "author": "John Doe",
+    "status": "SIGNED",
+    "updatedAt": "2025-11-28T10:15:00.000Z",
+    "content": "Some contract text..."
+  },
+  {
+    "id": 2,
+    "title": "Internal Regulations Draft",
+    "author": "Jane Smith",
+    "status": "DRAFT",
+    "updatedAt": "2025-11-27T09:00:00.000Z",
+    "content": "Draft of internal regulations..."
+  }
+]

@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>
+  {{ data.mode === 'create' ? 'New document' : 'Edit document' }}
+</h2>
+
+<form mat-dialog-content [formGroup]="form" class="dialog-form">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Author</mat-label>
+    <input matInput formControlName="author"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option *ngFor="let s of statuses" [value]="s">
+        {{ s }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Content</mat-label>
+    <textarea matInput formControlName="content" rows="5"></textarea>
+  </mat-form-field>
+</form>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</div>

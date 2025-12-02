@@ -1,0 +1,36 @@
+<div class="login-wrapper">
+  <mat-card class="login-card">
+    <h2 class="title">Вход в систему</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Пароль</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="full-width"
+        [disabled]="form.invalid || (loading$ | async)"
+      >
+        <ng-container *ngIf="!(loading$ | async); else loadingTpl">
+          <button matButton="filled">Войти</button>
+        </ng-container>
+        <ng-template #loadingTpl>
+          <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+        </ng-template>
+      </button>
+
+      <div class="error" *ngIf="error$ | async as error">
+        {{ error }}
+      </div>
+    </form>
+  </mat-card>
+</div>
