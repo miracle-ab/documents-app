@@ -48,7 +48,7 @@ export const documentsReducer = createReducer(
   })),
   on(DocumentsActions.createSuccess, (state, { document }) => ({
     ...state,
-    items: [document, ...state.items],
+    items: [...state.items, document],
     total: state.total + 1,
   })),
   on(DocumentsActions.updateSuccess, (state, { document }) => ({

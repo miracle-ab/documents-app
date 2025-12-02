@@ -1,59 +1,231 @@
-# DocumentsApp
+# Документы — тестовое задание (Angular + NgRx)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.1.
+README составлен **строго по твоей структуре проекта**, чтобы его можно было сразу положить в корень репозитория.
 
-## Development server
+---
 
-To start a local development server, run:
+## 📂 Структура проекта (фактическая)
 
-```bash
-ng serve
+```
+src/
+  app/
+    core/
+      guards/
+        auth-guard.ts
+        login-guard.ts
+      interceptors/
+        ...
+      models/
+        ...
+      services/
+        ...
+    features/
+      auth/
+        login/
+          login.ts
+          login.html
+          login.scss
+          login.spec.ts
+        state/
+          auth.actions.ts
+          auth.effects.ts
+          auth.reducer.ts
+          auth.selectors.ts
+      documents/
+        document-details/
+          document-details.ts
+          document-details.html
+          document-details.scss
+          document-details.spec.ts
+        document-dialog/
+          ...
+        documents-list/
+          documents-list.ts
+          documents-list.html
+          documents-list.scss
+          documents-list.spec.ts
+        state/
+          documents.actions.ts
+          documents.effects.ts
+          documents.reducer.ts
+          documents.selectors.ts
+    shared/
+      app.config.ts
+      app.routes.ts
+      app.html
+      app.scss
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Архитектура построена по принципу **feature-based structure**, где каждая функциональная область полностью инкапсулирует:
 
-## Code scaffolding
+- компоненты,
+- шаблоны,
+- стили,
+- состояние NgRx,
+- тесты.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
+## 🚀 Основной функционал
+
+### 1. Авторизация
+
+- Простой логин-экран (`features/auth/login`).
+- После успешной авторизации:
+  - токен сохраняется в `localStorage`,
+  - пользователь перенаправляется на список документов.
+- `AuthGuard` защищает роуты.
+- `LoginGuard` не пускает авторизованного пользователя обратно на `/login`.
+
+### 2. Список документов
+
+Реализован в `features/documents/documents-list`.
+
+Функциональность:
+
+- пагинация,
+- сортировка,
+- поиск,
+- таблица с горизонтальным/вертикальным скроллом,
+- загрузка данных через NgRx Effects.
+
+### 3. Просмотр документа
+
+`document-details` — компонент просмотра документа.
+
+Открывается в:
+
+- полноценной странице или
+- диалоговом окне (в зависимости от маршрутов/UX).
+
+Получает данные через:
+
+```
+GET /documents/:id
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Состояние хранится в `documents`-слайсе.
 
-```bash
-ng generate --help
+### 4. Редактирование / создание документа
+
+`document-dialog` — универсальный диалог:
+
+- редактирование существующего,
+- создание нового (`POST /documents`),
+- валидация формы.
+
+### 5. Mock API
+
+Реализовано через сервисы в `core/services`:
+
+- **AuthApiService** — мок логина.
+- **DocumentsApiService** — CRUD по документам.
+
+Данные загружаются из:
+
+```
+assets/mock/documents.json
 ```
 
-## Building
+Фильтрация, сортировка, пагинация выполняются на стороне сервиса.
 
-To build the project run:
+---
 
-```bash
-ng build
+## 🧱 NgRx
+
+Каждый модуль (`auth`, `documents`) имеет свой набор:
+
+- `*.actions.ts`
+- `*.reducer.ts`
+- `*.effects.ts`
+- `*.selectors.ts`
+
+### Auth slice
+
+Хранит:
+
+- пользователя,
+- токен,
+- загрузку,
+- ошибки.
+
+### Documents slice
+
+Хранит:
+
+- список документов,
+- выбранный документ,
+- фильтры (search, page, pageSize, sort),
+- статус загрузки.
+
+---
+
+## 🔐 Интерсептор
+
+В `core/interceptors`:
+
+- добавляет `Authorization: Bearer <token>`,
+- добавляет `Accept-Language: ru`,
+- перехватывает ошибки и отдаёт их в эффекты.
+
+---
+
+## 🧪 Unit-тесты
+
+Минимальный набор тестов:
+
+- `auth-guard.spec.ts`
+- `login.spec.ts`
+- `document-details.spec.ts`
+- тесты reducer/effects также можно добавить
+
+---
+
+## 🧹 Prettier
+
+В корне проекта:
+
+```
+.prettierrc
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Со стандартными настройками:
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```json
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 100
+}
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## 🔧 Установка и запуск
 
 ```bash
-ng e2e
+npm ci
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Приложение поднимется на:
 
-## Additional Resources
+```
+http://localhost:4200/
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## 📝 Краткое описание архитектурных решений
+
+- Жёсткая фича-структура: каждая область полностью изолирована.
+- NgRx используется как главный источник truth-state.
+- OnPush повсюду → производительность и предсказуемость.
+- RxJS — только через async pipe, без ручных подписок.
+- Interceptor добавляет авторизацию и язык.
+- Полное покрытие CRUD жизненного цикла документов.
+- Базовая безопасность соблюдена: без raw HTML.
+
+---
+
+Если нужно — могу собрать тебе README **в markdown со скрином структуры**, либо **сгенерировать README в стиле корпоративного шаблона**.  
